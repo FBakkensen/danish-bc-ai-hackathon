@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Danish BC Developer AI Hackathon — Kickoff</title>
+<meta name="description" content="Kickoff for the Danish BC Developer AI Hackathon: AI-assisted AL development, harness engineering and feedback loops.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='11' width='4' height='4' fill='%231A7F37'/%3E%3Crect x='6' y='7' width='4' height='8' fill='%231A7F37'/%3E%3Crect x='11' y='3' width='4' height='12' fill='%231A7F37'/%3E%3C/svg%3E">
+<style>
+:root{
+  --paper:#FCFCFA;
+  --ink:#16191D;
+  --muted:#57606A;
+  --faint:#8B949E;
+  --line:#D8DEE4;
+  --wash:#F3F5F7;
+  --green:#1A7F37;
+  --green-soft:#DDF4E4;
+  --red:#CF222E;
+  --red-soft:#FFEBE9;
+  --blue:#0969DA;
+  --mono:"Cascadia Code","Cascadia Mono",Consolas,"SF Mono","Fira Mono",monospace;
+  --sans:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:var(--sans);
+  font-size:clamp(16px,1.25vw,19px);line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--green-soft)}
+a{color:var(--blue);text-decoration:none}
+a:hover,a:focus-visible{text-decoration:underline}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:2px}
+
+/* ---------- chrome ---------- */
+#bar{position:fixed;top:0;left:0;height:3px;width:100%;background:var(--green);
+  transform:scaleX(0);transform-origin:0 50%;z-index:40}
+#rail{position:fixed;left:18px;bottom:26px;z-index:30;display:flex;flex-direction:column-reverse;gap:5px}
+#rail a{display:block;width:15px;height:8px;background:transparent;border:1px solid var(--line);border-radius:2px;transition:background .3s,border-color .3s}
+#rail a.past{background:var(--line);border-color:var(--line)}
+#rail a.now{background:var(--green);border-color:var(--green)}
+#hint{position:fixed;right:20px;bottom:20px;z-index:30;font-family:var(--mono);
+  font-size:.68rem;color:var(--faint);letter-spacing:.05em;user-select:none}
+@media(max-width:900px){#rail,#hint{display:none}}
+
+/* ---------- stage skeleton ---------- */
+section.stage{min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+  max-width:1060px;margin:0 auto;padding:11vh 26px 8vh}
+.eyebrow{font-family:var(--mono);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:1.1rem}
+.eyebrow b{color:var(--green);font-weight:600}
+h1,h2{font-weight:800;letter-spacing:-.022em;line-height:1.04;text-wrap:balance}
+h1{font-size:clamp(2.7rem,7vw,5.4rem)}
+h2{font-size:clamp(2.1rem,5vw,3.9rem);margin-bottom:1.4rem}
+.lede{font-size:clamp(1.05rem,1.7vw,1.32rem);color:var(--muted);max-width:44rem;margin-bottom:1.6rem}
+.lede strong{color:var(--ink)}
+
+/* ---------- reveals ---------- */
+.rv{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease}
+.rv.on{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rv{opacity:1;transform:none;transition:none}
+}
+.print .rv{opacity:1;transform:none}
+
+/* ---------- shared components ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:1.6rem 0}
+.stat{border-top:3px solid var(--ink);padding-top:.55rem}
+.stat.ok{border-top-color:var(--green)}
+.stat .v{font-family:var(--mono);font-weight:600;font-size:clamp(1.7rem,3.4vw,2.7rem);line-height:1.1}
+.stat .v small{font-size:.55em;color:var(--muted);font-weight:400}
+.stat .l{font-size:.85rem;color:var(--muted);margin-top:.2rem}
+
+.quote{border-left:4px solid var(--green);padding:.4rem 0 .4rem 1.2rem;margin:1.8rem 0;max-width:42rem}
+.quote p{font-size:clamp(1.15rem,2vw,1.5rem);font-weight:600;letter-spacing:-.01em}
+.quote cite{display:block;font-family:var(--mono);font-style:normal;font-size:.75rem;color:var(--muted);margin-top:.5rem}
+
+.code{font-family:var(--mono);font-size:clamp(.82rem,1.35vw,1.02rem);line-height:1.65;
+  background:var(--wash);border:1px solid var(--line);border-radius:10px;
+  padding:1.2rem 1.4rem;overflow-x:auto;margin:1.4rem 0}
+.code .k{color:var(--green);font-weight:600}
+.code .c{color:var(--faint)}
+.code .s{color:var(--blue)}
+.code .r{color:var(--red)}
+
+details.rec{border:1px solid var(--line);border-radius:10px;background:var(--wash);
+  margin:1.1rem 0 0;max-width:52rem}
+details.rec>summary{cursor:pointer;list-style:none;padding:.7rem 1.1rem;
+  font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;color:var(--muted);user-select:none}
+details.rec>summary::before{content:"▸ ";color:var(--green)}
+details.rec[open]>summary::before{content:"▾ "}
+details.rec>summary::-webkit-details-marker{display:none}
+details.rec .body{padding:.2rem 1.3rem 1.2rem;font-size:.94rem;color:var(--ink)}
+details.rec .body p{margin:.55rem 0}
+details.rec .body ul{margin:.55rem 0 .55rem 1.2rem}
+details.rec .body li{margin:.35rem 0}
+details.rec .body .code{margin:.8rem 0;background:#fff}
+
+.btn{display:inline-block;font-family:var(--mono);font-size:.88rem;font-weight:600;
+  color:var(--ink);background:#fff;border:1.5px solid var(--ink);border-radius:8px;
+  padding:.65rem 1.1rem;margin:.3rem .5rem .3rem 0;transition:background .2s}
+.btn:hover{background:var(--green-soft);text-decoration:none}
+.btn .dim{color:var(--muted);font-weight:400}
+
+.tag{display:inline-block;font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;
+  text-transform:uppercase;border-radius:99px;padding:.18rem .6rem;border:1px solid var(--line);color:var(--muted)}
+.tag.go{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+
+/* ---------- hero ---------- */
+#hero{align-items:flex-start;text-align:left}
+#hero .sub{font-size:clamp(1.1rem,2vw,1.45rem);color:var(--muted);max-width:38rem;margin-top:1.4rem}
+#hero .tease{margin-top:3.2rem;font-family:var(--mono);font-size:.95rem;color:var(--ink)}
+#hero .tease::before{content:"$ ";color:var(--green)}
+#hero .keys{margin-top:.8rem;font-family:var(--mono);font-size:.75rem;color:var(--faint)}
+kbd{font-family:var(--mono);font-size:.85em;border:1px solid var(--line);border-bottom-width:2px;
+  border-radius:4px;padding:.05em .45em;background:#fff;color:var(--muted)}
+
+/* ---------- timeline ---------- */
+.tl{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:2rem 0 1rem;counter-reset:tl}
+.tl .n{position:relative;padding:1.1rem .9rem 0 0}
+.tl .n::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--line)}
+.tl .n::after{content:"";position:absolute;top:-4px;left:0;width:10px;height:10px;border-radius:50%;
+  background:var(--ink)}
+.tl .n:last-child::after{background:var(--green)}
+.tl .n:last-child::before{background:linear-gradient(90deg,var(--line),var(--green))}
+.tl time{font-family:var(--mono);font-weight:600;font-size:clamp(1.1rem,2vw,1.5rem);display:block}
+.tl .n:last-child time{color:var(--green)}
+.tl .d{font-size:.85rem;color:var(--muted);margin-top:.25rem;max-width:15rem}
+@media(max-width:760px){
+  .tl{grid-template-columns:1fr;border-left:2px solid var(--line);padding-left:1.2rem}
+  .tl .n{padding:0 0 1.2rem}
+  .tl .n::before{display:none}
+  .tl .n::after{left:-1.85rem;top:.35rem}
+}
+
+/* ---------- pipeline flow ---------- */
+.flow{font-family:var(--mono);font-size:clamp(.8rem,1.5vw,1rem);line-height:2.1;margin:1.4rem 0;max-width:52rem}
+.flow .step{white-space:nowrap;background:#fff;border:1px solid var(--line);border-radius:6px;padding:.2rem .55rem}
+.flow .arr{color:var(--faint);padding:0 .15rem}
+.flow .bot{border-color:var(--green);color:var(--green)}
+
+/* ---------- levels ---------- */
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:1.4rem 0}
+.lv{border:1px solid var(--line);border-radius:12px;padding:1.3rem 1.3rem 1.1rem;background:#fff}
+.lv.hot{border-color:var(--green);box-shadow:0 0 0 3px var(--green-soft)}
+.lv .id{font-family:var(--mono);font-size:.78rem;color:var(--muted);letter-spacing:.1em}
+.lv h3{font-size:1.35rem;font-weight:800;letter-spacing:-.01em;margin:.3rem 0 .5rem}
+.lv p{font-size:.94rem;color:var(--muted);margin-bottom:.9rem}
+
+/* ---------- stairway ---------- */
+.stairs{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:end;
+  margin:2.4rem 0 .8rem;min-height:290px}
+.st{display:flex;flex-direction:column;justify-content:flex-end}
+.st .blk{border-radius:6px 6px 0 0;background:var(--line);width:100%}
+.st.today .blk{background:var(--green)}
+.st.next .blk{background:repeating-linear-gradient(45deg,var(--wash),var(--wash) 6px,var(--line) 6px,var(--line) 8px);border:1px dashed var(--faint)}
+.st .lab{font-family:var(--mono);font-size:clamp(.62rem,1.1vw,.82rem);margin-top:.5rem;color:var(--ink)}
+.st .lab small{display:block;color:var(--muted);font-family:var(--sans);font-size:.78rem}
+.st.today .lab{color:var(--green);font-weight:600}
+.stair-note{font-size:.95rem;color:var(--muted);max-width:44rem}
+@media(max-width:700px){.stairs{min-height:200px}}
+
+/* ---------- checklist ---------- */
+.rules{list-style:none;margin:1.6rem 0;max-width:44rem}
+.rules li{display:flex;gap:.9rem;align-items:baseline;padding:.75rem 0;border-bottom:1px solid var(--line);
+  font-size:clamp(1.05rem,1.9vw,1.4rem);font-weight:600;letter-spacing:-.01em}
+.rules li::before{content:"✓";font-family:var(--mono);color:var(--green);font-weight:600}
+.rules li small{display:block;font-size:.82rem;font-weight:400;color:var(--muted);letter-spacing:0}
+
+/* ---------- agenda ---------- */
+.agenda{list-style:none;margin:1.4rem 0;max-width:44rem;counter-reset:ag}
+.agenda li{display:flex;gap:1.1rem;align-items:baseline;padding:.5rem 0;border-bottom:1px solid var(--line)}
+.agenda li::before{counter-increment:ag;content:"0" counter(ag);font-family:var(--mono);
+  font-size:.8rem;color:var(--faint)}
+.agenda li.brk{color:var(--muted)}
+.agenda li b{font-weight:600}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:1.6rem 0 .6rem}
+.role{border-top:3px solid var(--ink);padding-top:.55rem}
+.role h3{font-size:1.05rem;font-weight:700}
+.role p{font-size:.88rem;color:var(--muted)}
+
+/* ---------- work items ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:1.2rem 0}
+.chip{font-family:var(--mono);font-size:.82rem;background:#fff;border:1px solid var(--line);
+  border-radius:8px;padding:.5rem .8rem}
+.chip b{color:var(--green);font-weight:600}
+.scen{width:100%;border-collapse:collapse;margin:1.4rem 0;font-size:clamp(.82rem,1.4vw,1rem);max-width:52rem}
+.scen th{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);text-align:left;font-weight:600;padding:.45rem .6rem;border-bottom:2px solid var(--ink)}
+.scen td{padding:.5rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+.scen td.num{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+.scen .ok{color:var(--green);font-family:var(--mono);font-weight:600;white-space:nowrap}
+.scen .no{color:var(--red);font-family:var(--mono);font-weight:600;white-space:nowrap}
+.formula{font-family:var(--mono);font-size:clamp(1rem,2.2vw,1.5rem);background:var(--wash);
+  border:1px solid var(--line);border-radius:10px;padding:1rem 1.3rem;margin:1.4rem 0;max-width:44rem}
+.formula .k{color:var(--green)}
+
+/* ---------- closing ---------- */
+#ask{text-align:center;align-items:center}
+#ask h2{font-size:clamp(2.4rem,6.4vw,5rem);max-width:16ch;margin:0 auto 2.4rem}
+#ask h2 em{font-style:normal;color:var(--green)}
+#ask .links{display:flex;flex-wrap:wrap;gap:0 .4rem;justify-content:center;margin-bottom:2rem}
+#ask .qr{width:150px;margin:1rem auto 0;border:1px solid var(--line);border-radius:10px;padding:8px;background:#fff}
+#ask .qr svg{display:block;width:100%;height:auto}
+#ask .url{font-family:var(--mono);font-size:.78rem;color:var(--muted);margin-top:.5rem}
+
+footer{max-width:1060px;margin:0 auto;padding:2rem 26px 3rem;border-top:1px solid var(--line);
+  font-size:.8rem;color:var(--muted)}
+footer p{margin:.3rem 0}
+</style>
+</head>
+<body>
+
+<div id="bar" aria-hidden="true"></div>
+<nav id="rail" aria-label="Sections"></nav>
+<div id="hint">space / page&nbsp;↓&nbsp;&nbsp;·&nbsp;&nbsp;or just scroll</div>
+
+<!-- 01 · hero -->
+<section class="stage" id="hero" data-rail="Start">
+  <p class="eyebrow">kickoff · one hour · then the real work</p>
+  <h1>Danish BC Developer<br>AI Hackathon</h1>
+  <p class="sub">AI-assisted AL development, harness engineering and feedback loops.</p>
+  <p class="tease rv">one question will follow us all day. it's waiting at the end.</p>
+  <p class="keys rv">presenting: <kbd>space</kbd> or <kbd>page ↓</kbd> advances one beat · reading later: just scroll, and open the <span style="color:var(--green)">▸ for the record</span> blocks</p>
+</section>
+
+<!-- 02 · wake-up: the ceiling -->
+<section class="stage" id="ceiling" data-rail="Eleven hours">
+  <p class="eyebrow">evidence · public repo · <b>StefanMaron/BusinessCentral.AL.Runner</b></p>
+  <h2>Bug report to release:<br>eleven hours.</h2>
+  <p class="lede"><strong>AL Runner</strong> is the community test runner you will use this afternoon.
+  On the morning of <strong>5 August</strong> it could not start on Windows at all. I filed the bug at 05:52.</p>
+
+  <div class="tl rv">
+    <div class="n"><time>05:52</time><div class="d">issue #1650 filed — runner dead on Windows, full stack trace</div></div>
+    <div class="n"><time>10:34</time><div class="d">maintainer opens PR #1657 — real Windows support</div></div>
+    <div class="n"><time>16:41</time><div class="d">issue closed by commit</div></div>
+    <div class="n"><time>16:58</time><div class="d"><strong>v2.0.0.0 released</strong> — same day</div></div>
+  </div>
+
+  <div class="stats rv">
+    <div class="stat ok"><div class="v">56 <small>→ 55</small></div><div class="l">issues I filed in 8 weeks → fixed</div></div>
+    <div class="stat"><div class="v">11.4 h</div><div class="l">median time from report to fix</div></div>
+    <div class="stat"><div class="v">39 min</div><div class="l">fastest issue-to-merged-fix loop</div></div>
+    <div class="stat"><div class="v">6 <small>vs 1</small></div><div class="l">releases in those 6 weeks vs the 3 months before</div></div>
+  </div>
+
+  <p class="lede rv">Commits since late June: the maintainer <strong>102</strong> · <strong>claude[bot] 62</strong> · me <strong>17</strong>.
+  The second-busiest committer on this repo is an agent.</p>
+
+  <div class="flow rv">
+    <span class="step">crash telemetry</span><span class="arr">→</span><span class="step bot">auto-filed issue</span><span class="arr">→</span><span class="step bot">triage agent</span><span class="arr">→</span><span class="step bot">2 × impl agents · TDD</span><span class="arr">→</span><span class="step bot">orchestrator merges</span><span class="arr">→</span><span class="step">changelog writes itself</span>
+  </div>
+  <p class="lede rv">A production crash becomes a merged, tested fix with no human in the required path —
+  and a human can take over any item, at any stage, just by assigning themselves.
+  By design, <strong>no agent can merge its own work</strong>.</p>
+
+  <blockquote class="quote rv">
+    <p>“Green means the runner agrees with itself.”</p>
+    <cite>.claude/rules/ — why a test only proves something when it's verified against real Business Central</cite>
+  </blockquote>
+
+  <details class="rec">
+    <summary>for the record — how that pipeline is wired</summary>
+    <div class="body">
+      <ul>
+        <li>A scheduled <strong>telemetry triage bot</strong> queries Application Insights, groups crashes by root cause, uses an LLM to dedupe against open issues, and files structured reports. The bot has its own 354-line test suite.</li>
+        <li>A <strong>triage agent</strong> makes one pass over new issues and labels them <em>ready</em> or <em>needs-input</em>. It is not allowed to write code, and abstaining ("left for human") is a valid outcome.</li>
+        <li>Two <strong>implementation agents</strong> work in parallel, each in an isolated git worktree, strict red-first TDD, one open PR at a time. They cannot merge.</li>
+        <li>An <strong>orchestrator</strong> sanity-reviews each PR against its linked issue and merges. It has merge rights but no edit rights — separation of powers is enforced by tool permissions, not by trust.</li>
+        <li>The <strong>assignee field is the human/agent boundary</strong>: agents never touch anything assigned to a person, so a human takes over by assigning themselves.</li>
+        <li>The agents' instruction files are versioned, reviewed and improved after every surprise — including one rule written after five documented agent stalls, quoting the exact sentence each agent talked itself into.</li>
+      </ul>
+      <p>Every number on this screen is public: <a href="https://github.com/StefanMaron/BusinessCentral.AL.Runner" rel="noopener">github.com/StefanMaron/BusinessCentral.AL.Runner</a>.</p>
+    </div>
+  </details>
+</section>
+
+<!-- 03 · wake-up: the ordinary -->
+<section class="stage" id="ordinary" data-rail="An ordinary week">
+  <p class="eyebrow">evidence · my own session history · jan–aug 2026</p>
+  <h2>And that was the exceptional&nbsp;week.<br>Here is an ordinary one.</h2>
+
+  <div class="stats rv">
+    <div class="stat"><div class="v">2,054</div><div class="l">agent sessions since 20 January</div></div>
+    <div class="stat ok"><div class="v">70%</div><div class="l">of them Business Central work</div></div>
+    <div class="stat"><div class="v">~181<small>/week</small></div><div class="l">sessions in August</div></div>
+  </div>
+
+  <p class="lede rv">Daily AL product work now runs as a pipeline:
+  work item → <strong>tests designed first</strong> → red → implement → green →
+  <strong>mutation-harden</strong> → breaking-change gate → pull request.
+  A recent run: 8 defects injected into finished code, <strong>8 caught by the tests</strong> —
+  with 1,616 unit and 1,060 integration tests green behind them.</p>
+
+  <blockquote class="quote rv">
+    <p>“Make sure the new tests test the intent of the prod code — not just to kill the mutant.”</p>
+    <cite>me, steering an agent mid-run. the judgment is still the developer's job.</cite>
+  </blockquote>
+
+  <p class="lede rv" style="max-width:46rem"><strong>One sentence, said once:</strong>
+  the gap between developers who direct agents and those who don't is compounding.</p>
+
+  <p class="lede rv" style="max-width:46rem">But here is the number that should
+  <em>remove</em> the fear: across all of this, the agent share of commits moved from
+  <strong>33% to 36%</strong>. The engineering didn't leave.
+  <strong style="border-bottom:3px solid var(--green)">It moved up a level.</strong></p>
+
+  <details class="rec">
+    <summary>for the record — what those sessions actually do</summary>
+    <div class="body">
+      <ul>
+        <li><strong>Specification first:</strong> the agent reads the work item, negotiates the acceptance criteria with me in Business Central vocabulary, and writes the agreed test specification back into Azure DevOps before any code exists.</li>
+        <li><strong>Red first:</strong> tests are written and observed failing for the expected reason before implementation starts.</li>
+        <li><strong>Mutation testing:</strong> after green, deliberate defects are injected to prove the tests actually guard the behaviour — tests that can't catch a broken implementation are decoration.</li>
+        <li><strong>Gates before PR:</strong> compile, analyzers, full test suite and AppSource breaking-change validation run before a pull request is opened.</li>
+        <li>Numbers are from my real session history, January–August 2026, across product AL repositories and BC tooling.</li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+<!-- 04 · levels -->
+<section class="stage" id="levels" data-rail="Three levels">
+  <p class="eyebrow">concept 1 of 3 · operating levels</p>
+  <h2>Three ways to work<br>with an agent.</h2>
+
+  <div class="levels">
+    <div class="lv rv">
+      <div class="id">LEVEL 1</div>
+      <h3>Ask</h3>
+      <p>Paste context in, read what comes back, judge it by eye. The agent is a very fast colleague you must proofread.</p>
+      <span class="tag">most of us are here</span>
+    </div>
+    <div class="lv hot rv">
+      <div class="id">LEVEL 2</div>
+      <h3>Equip &amp; loop</h3>
+      <p>Give the agent tools, verification gates and a contract — then let it iterate against evidence instead of your patience.</p>
+      <span class="tag go">today's target</span>
+    </div>
+    <div class="lv rv">
+      <div class="id">LEVEL 3</div>
+      <h3>Orchestrate</h3>
+      <p>Several agents with distinct roles and enforced boundaries. Humans supervise, and can take over anything, any time.</p>
+      <span class="tag">where AL Runner runs</span>
+    </div>
+  </div>
+
+  <p class="lede rv">You just saw Level 3 working in public. Nobody climbs there in a day —
+  but <strong>Level 2 is one afternoon away</strong>, and the afternoon is today.</p>
+</section>
+
+<!-- 05 · stairway -->
+<section class="stage" id="stairway" data-rail="The stairway">
+  <p class="eyebrow">concept 2 of 3 · the engineering stairway</p>
+  <h2>The stairway we're climbing.</h2>
+  <p class="lede">Each step <strong>keeps</strong> everything below it — nothing you know becomes worthless.
+  The craft moves up, and your engineering knowledge is the raw material for every step.</p>
+
+  <div class="stairs rv" role="img" aria-label="Six ascending steps: old-school, prompt, context, harness, loop, graph engineering. Context, harness and loop are highlighted as today's focus.">
+    <div class="st"><div class="blk" style="height:36px"></div><div class="lab">old-school<small>the engineering you already do</small></div></div>
+    <div class="st"><div class="blk" style="height:72px"></div><div class="lab">prompt<small>asking well</small></div></div>
+    <div class="st today"><div class="blk" style="height:108px"></div><div class="lab">context<small>supplying the right facts</small></div></div>
+    <div class="st today"><div class="blk" style="height:144px"></div><div class="lab">harness<small>tools + verification gates</small></div></div>
+    <div class="st today"><div class="blk" style="height:180px"></div><div class="lab">loop<small>iterate until proven</small></div></div>
+    <div class="st next"><div class="blk" style="height:216px"></div><div class="lab">graph<small>agents working together</small></div></div>
+  </div>
+  <p class="stair-note rv"><span style="color:var(--green);font-weight:600">■ today</span> we make context, harness and loop engineering concrete — in AL.
+  Credit: Freddy Kristiansen, <a href="https://freddysblog.com/2026/08/15/the-engineering-stairway-to-heaven/" rel="noopener">The Engineering Stairway to Heaven</a>.</p>
+
+  <details class="rec">
+    <summary>for the record — what each step means</summary>
+    <div class="body">
+      <ul>
+        <li><strong>Old-school engineering</strong> — requirements, design, code review, testing discipline. Still the foundation; agents amplify it, they don't replace it.</li>
+        <li><strong>Prompt engineering</strong> — phrasing a request so the agent understands the task.</li>
+        <li><strong>Context engineering</strong> — making sure the agent sees the right facts: the work item, the relevant files, the standards that apply.</li>
+        <li><strong>Harness engineering</strong> — giving the agent tools it can run and gates it must pass: compiler, analyzers, test runner.</li>
+        <li><strong>Loop engineering</strong> — letting the agent iterate against the harness until the evidence is green — or a stop rule fires.</li>
+        <li><strong>Graph engineering</strong> — multiple agents with roles, boundaries and handoffs, evidence flowing between them. The AL Runner pipeline you saw earlier.</li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+<!-- 06 · contract -->
+<section class="stage" id="contract" data-rail="The contract">
+  <p class="eyebrow">concept 3 of 3 · the skill contract</p>
+  <h2>Every skill answers<br>four questions.</h2>
+  <p class="lede">Today you will package your engineering knowledge into <strong>skills</strong> —
+  small, reusable instructions an agent can execute. Every one of them must define:</p>
+
+  <div class="code rv"><span class="c"># the contract — no skill is done without all four</span>
+<span class="k">Context:</span>  where may the agent look?
+<span class="k">Done:</span>     what exact result is required?
+<span class="k">Verify:</span>   how are success <span class="r">and failure</span> proven?
+<span class="k">Stop:</span>     when must it halt and escalate?</div>
+
+  <p class="lede rv">If a skill can't answer all four, it isn't a skill yet — it's a hope.
+  And note the red part: today, every skill must be proven with a <strong>deliberate failure</strong>, not just a success.</p>
+</section>
+
+<!-- 07 · ground rules -->
+<section class="stage" id="rules" data-rail="Ground rules">
+  <p class="eyebrow">how we work today</p>
+  <h2>Five rules for the day.</h2>
+  <ul class="rules">
+    <li class="rv"><div>Manual before autonomous.<small>Understand every step by invoking it yourself before any loop runs it for you.</small></div></li>
+    <li class="rv"><div>Small task, strong harness.<small>The ambition today is the quality of the verification — not the size of the feature.</small></div></li>
+    <li class="rv"><div>Evidence, or it didn't happen.<small>"It should work" is not a result. Which tool ran? Where is the output?</small></div></li>
+    <li class="rv"><div>Struggle is part of the design.<small>This is not a race and not a prompt contest. Getting stuck productively is the exercise.</small></div></li>
+    <li class="rv"><div>No false green — ever.<small>Never weaken a test, a rule or a criterion to make a result look good.</small></div></li>
+  </ul>
+  <p class="lede rv">And one comfort: the autonomous loop is a <strong>stretch goal</strong>.
+  A working manual verification ladder already counts as full success.</p>
+</section>
+
+<!-- 08 · the day -->
+<section class="stage" id="today" data-rail="The day">
+  <p class="eyebrow">logistics · teams of 2–3, mixed AI experience</p>
+  <h2>The shape of the day.</h2>
+
+  <ol class="agenda rv">
+    <li><b>Welcome &amp; why</b> — this hour</li>
+    <li><b>Levels, stairway, contract</b> — the concepts you just met</li>
+    <li><b>Bootstrap Azure DevOps MCP</b> — start Work Item 1</li>
+    <li><b>Build the skills</b> — compile · analyzer · test</li>
+    <li class="brk"><b>Break</b> — shared checkpoint</li>
+    <li><b>Combined verification</b> — start Work Item 2</li>
+    <li><b>TDD implementation</b> — red, green, refactor</li>
+    <li><b>Demos &amp; debrief</b> — optional bounded loop</li>
+  </ol>
+
+  <div class="roles rv">
+    <div class="role"><h3>Driver</h3><p>Hands on the editor and the agent.</p></div>
+    <div class="role"><h3>Verifier</h3><p>Challenges every claim: does the evidence really prove the checkpoint?</p></div>
+    <div class="role"><h3>Recorder</h3><p>Captures skill contracts, decisions, failures and lessons.</p></div>
+  </div>
+  <p class="lede rv">Rotate roles after the compile and analyzer stages — everyone drives, everyone doubts.</p>
+</section>
+
+<!-- 09 · work item 1 -->
+<section class="stage" id="wi1" data-rail="Work Item 1">
+  <p class="eyebrow">hands-on · azure devops · <b>work item 13226</b></p>
+  <h2>Work Item 1:<br>build the harness.</h2>
+
+  <p class="lede rv">Your first move: read the work item yourself — then make Copilot fetch the
+  <em>same</em> work item through the Azure DevOps MCP server and compare.
+  That's the first climb: <strong>human-provided context → tool-enabled context.</strong></p>
+
+  <p class="lede rv">From a <strong>blank repository</strong>, your team builds an AL app, a test app,
+  and four manually invokable skills — each with the four-question contract,
+  each proven with a success <strong>and</strong> a deliberate failure:</p>
+
+  <div class="chips rv">
+    <span class="chip"><b>1</b> compile</span>
+    <span class="chip"><b>2</b> analyzer</span>
+    <span class="chip"><b>3</b> test <span style="color:var(--muted)">· AL Runner</span></span>
+    <span class="chip"><b>4</b> verify-all <span style="color:var(--muted)">· fail-fast gates</span></span>
+  </div>
+
+  <p class="lede rv">Five checkpoints, A to E, mark the path — the last one is a combined verification
+  that stops at the first failed gate and passes only when every gate passes.</p>
+
+  <p class="rv"><a class="btn" href="https://dev.azure.com/Dynalogic/9A%20Intern/_workitems/edit/13226/" rel="noopener">open work item 13226 <span class="dim">→ full requirements live here</span></a></p>
+
+  <details class="rec">
+    <summary>for the record — checkpoints A–E</summary>
+    <div class="body">
+      <ul>
+        <li><strong>A</strong> — Copilot retrieves work item 13226 through Azure DevOps MCP, and the retrieved content matches what you read manually.</li>
+        <li><strong>B</strong> — a repository created from blank contains an app and a separate test app, and both compile.</li>
+        <li><strong>C</strong> — the compile and analyzer skills each prove a pass <em>and</em> a deliberate failure, preserving the diagnostics.</li>
+        <li><strong>D</strong> — the test skill distinguishes all tests passing, an assertion failure, and a compilation failure — via BusinessCentral.AL.Runner.</li>
+        <li><strong>E</strong> — the combined verification skill stops at each deliberately failed gate, shows which gate failed with its evidence, and completes when all gates pass.</li>
+      </ul>
+      <p>Also required: at least one skill improved after behaving unexpectedly — preserve the evidence, diagnose from it, make the smallest fix, retest both paths. Skills must never silently weaken their own rules.</p>
+      <p>These learning skills are exactly that — learning artifacts. Production work will use a shared, centrally maintained skill set; today is about understanding what such a skill set is made of, so you can use it, supervise it, challenge it and improve it.</p>
+    </div>
+  </details>
+</section>
+
+<!-- 10 · work item 2 -->
+<section class="stage" id="wi2" data-rail="Work Item 2">
+  <p class="eyebrow">hands-on · azure devops · <b>work item 13227</b></p>
+  <h2>Work Item 2:<br>prove the code.</h2>
+
+  <p class="lede rv">A real BC requirement: a reusable <strong>customer credit evaluation</strong> service.
+  Seven Gherkin scenarios are the definition of done — each becomes an AL test
+  (Given/When/Then → Arrange/Act/Assert) that must fail <em>before</em> it passes.</p>
+
+  <div class="formula rv"><span class="k">available credit</span> := credit limit − outstanding balance</div>
+
+  <table class="scen rv">
+    <thead><tr><th>scenario</th><th>limit</th><th>balance</th><th>amount</th><th>verdict</th></tr></thead>
+    <tbody>
+      <tr><td>within available credit</td><td class="num">10,000</td><td class="num">4,000</td><td class="num">5,000</td><td class="ok">✓ approved</td></tr>
+      <tr><td><strong>exactly at</strong> available credit</td><td class="num">10,000</td><td class="num">4,000</td><td class="num">6,000</td><td class="ok">✓ approved</td></tr>
+      <tr><td>one over available credit</td><td class="num">10,000</td><td class="num">4,000</td><td class="num">6,001</td><td class="no">✗ rejected</td></tr>
+      <tr><td>balance already over limit</td><td class="num">10,000</td><td class="num">11,000</td><td class="num">1</td><td class="no">✗ rejected</td></tr>
+      <tr><td>customer blocked for sales</td><td class="num">—</td><td class="num">—</td><td class="num">1,000</td><td class="no">✗ rejected</td></tr>
+      <tr><td>amount of zero</td><td class="num">—</td><td class="num">—</td><td class="num">0</td><td class="no">✗ validation error</td></tr>
+      <tr><td>negative amount</td><td class="num">—</td><td class="num">—</td><td class="num">−1</td><td class="no">✗ validation error</td></tr>
+    </tbody>
+  </table>
+
+  <p class="lede rv">When you're green: <strong>break your finished implementation on purpose</strong>
+  — flip the exact-boundary behaviour. If no test screams, your tests are decoration.
+  Then, if your harness has earned it, hand the remaining scenarios to a <strong>bounded agent loop</strong> and supervise.</p>
+
+  <p class="rv"><a class="btn" href="https://dev.azure.com/Dynalogic/9A%20Intern/_workitems/edit/13227" rel="noopener">open work item 13227 <span class="dim">→ full requirements live here</span></a></p>
+
+  <details class="rec">
+    <summary>for the record — the feature, in Gherkin</summary>
+    <div class="body">
+      <div class="code">Feature: Customer credit evaluation
+
+  Scenario: Approve an order within the available credit
+    <span class="k">Given</span> an unblocked customer with a credit limit of 10,000
+    <span class="k">And</span> the customer has an outstanding balance of 4,000
+    <span class="k">When</span> an order amount of 5,000 is evaluated
+    <span class="k">Then</span> the order is approved
+
+  Scenario: Approve an order exactly at the available credit
+    <span class="k">Given</span> an unblocked customer with a credit limit of 10,000
+    <span class="k">And</span> the customer has an outstanding balance of 4,000
+    <span class="k">When</span> an order amount of 6,000 is evaluated
+    <span class="k">Then</span> the order is approved
+
+  Scenario: Reject an order exceeding the available credit
+    <span class="k">Given</span> an unblocked customer with a credit limit of 10,000
+    <span class="k">And</span> the customer has an outstanding balance of 4,000
+    <span class="k">When</span> an order amount of 6,001 is evaluated
+    <span class="k">Then</span> the order is rejected
+    <span class="k">And</span> the rejection reason explains that the available credit is insufficient
+
+  Scenario: Reject an order when the balance already exceeds the credit limit
+    <span class="k">Given</span> an unblocked customer with a credit limit of 10,000
+    <span class="k">And</span> the customer has an outstanding balance of 11,000
+    <span class="k">When</span> an order amount of 1 is evaluated
+    <span class="k">Then</span> the order is rejected
+    <span class="k">And</span> the rejection reason explains that the available credit is insufficient
+
+  Scenario: Reject an order for a blocked customer
+    <span class="k">Given</span> a customer that is blocked for sales transactions
+    <span class="k">And</span> the customer has sufficient available credit
+    <span class="k">When</span> an order amount of 1,000 is evaluated
+    <span class="k">Then</span> the order is rejected
+    <span class="k">And</span> the rejection reason explains that the customer is blocked
+
+  Scenario: Reject an order amount of zero
+    <span class="k">Given</span> an unblocked customer with sufficient available credit
+    <span class="k">When</span> an order amount of 0 is evaluated
+    <span class="k">Then</span> the evaluation fails with a clear validation error
+
+  Scenario: Reject a negative order amount
+    <span class="k">Given</span> an unblocked customer with sufficient available credit
+    <span class="k">When</span> an order amount of -1 is evaluated
+    <span class="k">Then</span> the evaluation fails with a clear validation error</div>
+      <p>Every scenario runs the full TDD cycle: observe the test failing for the expected reason → smallest implementation → green → refactor → complete verification workflow. Rejections must carry a useful reason; zero and negative amounts are validation errors, not business rejections.</p>
+      <p>The optional autonomous loop must: create or update tests before implementation, run combined verification after changes, preserve tests and analyzer configuration, stop on unsupported functionality or after the agreed attempt cap, and report changes, verification, assumptions and risks. It never commits or changes acceptance criteria without approval.</p>
+    </div>
+  </details>
+</section>
+
+<!-- 11 · the question -->
+<section class="stage" id="ask" data-rail="The question">
+  <p class="eyebrow">keep this on the wall · all day</p>
+  <h2 class="rv">How can we make Copilot <em>prove</em> that its change is correct?</h2>
+
+  <div class="links rv">
+    <a class="btn" href="https://dev.azure.com/Dynalogic/9A%20Intern/_workitems/edit/13226/" rel="noopener">work item 13226 <span class="dim">· harness</span></a>
+    <a class="btn" href="https://dev.azure.com/Dynalogic/9A%20Intern/_workitems/edit/13227" rel="noopener">work item 13227 <span class="dim">· TDD</span></a>
+    <a class="btn" href="https://github.com/StefanMaron/BusinessCentral.AL.Runner" rel="noopener">AL Runner <span class="dim">· github</span></a>
+  </div>
+
+  <div class="qr rv">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41" shape-rendering="crispEdges" role="img" aria-label="QR code linking to this page"><path fill="#ffffff" d="M0 0h41v41H0z"/><path stroke="#16191D" d="M4 4.5h7m2 0h3m1 0h1m2 0h2m1 0h3m1 0h1m2 0h7M4 5.5h1m5 0h1m2 0h9m2 0h1m5 0h1m5 0h1M4 6.5h1m1 0h3m1 0h1m1 0h3m1 0h2m2 0h3m2 0h4m1 0h1m1 0h3m1 0h1M4 7.5h1m1 0h3m1 0h1m1 0h2m1 0h2m1 0h1m1 0h1m2 0h1m2 0h3m1 0h1m1 0h3m1 0h1M4 8.5h1m1 0h3m1 0h1m1 0h2m5 0h1m2 0h1m2 0h1m1 0h1m2 0h1m1 0h3m1 0h1M4 9.5h1m5 0h1m1 0h1m1 0h1m3 0h3m3 0h3m3 0h1m5 0h1M4 10.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M12 11.5h1m1 0h3m2 0h1m2 0h5m1 0h1M4 12.5h1m1 0h5m2 0h2m2 0h3m1 0h1m1 0h1m2 0h1m1 0h1m1 0h5M4 13.5h3m2 0h1m4 0h3m5 0h3m2 0h1m2 0h2m1 0h4M4 14.5h1m5 0h3m2 0h2m2 0h2m1 0h1m1 0h1m4 0h2m1 0h1m1 0h2M8 15.5h2m1 0h1m3 0h1m2 0h1m1 0h1m2 0h7m2 0h4M4 16.5h1m4 0h3m4 0h1m5 0h1m3 0h4m1 0h3m2 0h1M4 17.5h2m2 0h2m7 0h5m1 0h1m3 0h1m2 0h2m2 0h3M5 18.5h2m3 0h1m5 0h1m1 0h1m3 0h1m3 0h1m1 0h3m1 0h2m1 0h1M4 19.5h1m1 0h1m1 0h2m2 0h2m2 0h3m1 0h1m1 0h4m2 0h4m1 0h2M6 20.5h2m1 0h2m2 0h4m1 0h1m2 0h1m1 0h1m2 0h4m1 0h2m3 0h1M4 21.5h4m1 0h1m3 0h2m1 0h1m3 0h2m1 0h5m2 0h2m1 0h2m1 0h1M4 22.5h2m1 0h1m2 0h5m3 0h4m3 0h1m5 0h2m1 0h2M5 23.5h2m2 0h1m3 0h2m4 0h1m1 0h6m1 0h2m1 0h4m1 0h1M5 24.5h2m1 0h3m1 0h1m1 0h5m1 0h1m2 0h1m2 0h1m1 0h2m1 0h3m1 0h2M4 25.5h1m1 0h1m1 0h2m1 0h1m2 0h3m2 0h1m2 0h6m2 0h1m5 0h1M4 26.5h1m1 0h1m3 0h1m5 0h5m3 0h1m4 0h1m1 0h2m1 0h2M4 27.5h1m1 0h1m2 0h1m1 0h2m1 0h3m1 0h2m3 0h4m3 0h2m2 0h1M4 28.5h1m3 0h1m1 0h2m1 0h2m1 0h1m1 0h2m1 0h1m1 0h1m2 0h7m2 0h1M12 29.5h2m1 0h4m1 0h1m1 0h2m1 0h1m2 0h1m3 0h1m1 0h1m1 0h1M4 30.5h7m2 0h1m1 0h3m1 0h1m2 0h1m2 0h4m1 0h1m1 0h1m1 0h2M4 31.5h1m5 0h1m1 0h5m3 0h1m2 0h3m1 0h2m3 0h4M4 32.5h1m1 0h3m1 0h1m1 0h2m4 0h1m3 0h2m2 0h1m1 0h6M4 33.5h1m1 0h3m1 0h1m1 0h1m1 0h4m1 0h2m2 0h3m3 0h1m2 0h2m1 0h2M4 34.5h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h2m2 0h2m2 0h2m1 0h1m1 0h2m1 0h2M4 35.5h1m5 0h1m2 0h1m1 0h1m1 0h2m1 0h1m1 0h1m2 0h2m3 0h1m1 0h3M4 36.5h7m1 0h1m1 0h2m5 0h3m2 0h1m1 0h2m1 0h1m3 0h1"/></svg>
+    <div class="url">fbakkensen.github.io/<br>danish-bc-ai-hackathon</div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Danish BC Developer AI Hackathon</strong> · kickoff · Flemming Bakkensen · 9altitudes</p>
+  <p>Sources: Freddy Kristiansen, <a href="https://freddysblog.com/2026/08/15/the-engineering-stairway-to-heaven/" rel="noopener">The Engineering Stairway to Heaven</a> ·
+     <a href="https://alcops.dev/docs/" rel="noopener">ALCops</a> ·
+     <a href="https://github.com/StefanMaron/BusinessCentral.AL.Runner" rel="noopener">BusinessCentral.AL.Runner</a></p>
+  <p>One HTML file, no build step, no trackers. Scroll works everywhere; the ▸ blocks hold the detail.</p>
+</footer>
+
+<script>
+(function(){
+  var beats=[].slice.call(document.querySelectorAll('.rv'));
+  var sections=[].slice.call(document.querySelectorAll('section.stage'));
+  var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* reveal on scroll */
+  if('IntersectionObserver' in window && !reduced){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});
+    },{rootMargin:'0px 0px -15% 0px',threshold:0.01});
+    beats.forEach(function(b){io.observe(b);});
+  }else{
+    beats.forEach(function(b){b.classList.add('on');});
+  }
+
+  /* rail */
+  var rail=document.getElementById('rail');
+  sections.forEach(function(s,i){
+    var a=document.createElement('a');
+    a.href='#'+s.id;a.title=s.getAttribute('data-rail')||s.id;
+    a.setAttribute('aria-label',a.title);
+    a.style.transform='translateX('+(i*4)+'px)';
+    rail.appendChild(a);
+  });
+  var dots=[].slice.call(rail.children);
+  var so=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        var idx=sections.indexOf(e.target);
+        dots.forEach(function(d,i){
+          d.classList.toggle('now',i===idx);
+          d.classList.toggle('past',i<idx);
+        });
+      }
+    });
+  },{rootMargin:'-45% 0px -45% 0px'});
+  sections.forEach(function(s){so.observe(s);});
+
+  /* progress bar */
+  var bar=document.getElementById('bar'),ticking=false;
+  function prog(){
+    var h=document.documentElement,max=h.scrollHeight-h.clientHeight;
+    bar.style.transform='scaleX('+(max>0?h.scrollTop/max:0)+')';ticking=false;
+  }
+  addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(prog);}},{passive:true});
+  prog();
+
+  /* presenter keys — space/page-down = next beat, page-up = previous section */
+  function centerOf(el){var r=el.getBoundingClientRect();return r.top+r.height/2;}
+  function next(){
+    var t=null,i;
+    for(i=0;i<beats.length;i++){if(!beats[i].classList.contains('on')){t=beats[i];break;}}
+    if(t){t.scrollIntoView({behavior:reduced?'auto':'smooth',block:'center'});return;}
+    for(i=0;i<sections.length;i++){
+      if(sections[i].getBoundingClientRect().top>innerHeight*0.35){
+        sections[i].scrollIntoView({behavior:reduced?'auto':'smooth'});return;
+      }
+    }
+  }
+  function prev(){
+    for(var i=sections.length-1;i>=0;i--){
+      if(sections[i].getBoundingClientRect().top< -innerHeight*0.35){
+        sections[i].scrollIntoView({behavior:reduced?'auto':'smooth'});return;
+      }
+    }
+    sections[0].scrollIntoView({behavior:reduced?'auto':'smooth'});
+  }
+  addEventListener('keydown',function(e){
+    if(e.altKey||e.ctrlKey||e.metaKey)return;
+    if(e.target.closest&&e.target.closest('a,button,summary,input,textarea,select'))return;
+    switch(e.key){
+      case ' ':case 'PageDown':case 'ArrowDown':case 'ArrowRight':
+        e.preventDefault();next();break;
+      case 'PageUp':case 'ArrowUp':case 'ArrowLeft':
+        e.preventDefault();prev();break;
+      case 'Home':e.preventDefault();sections[0].scrollIntoView();break;
+      case 'End':e.preventDefault();sections[sections.length-1].scrollIntoView();break;
+    }
+  });
+
+  /* print / save-as-pdf: show everything */
+  addEventListener('beforeprint',function(){
+    document.body.classList.add('print');
+    beats.forEach(function(b){b.classList.add('on');});
+    [].forEach.call(document.querySelectorAll('details'),function(d){d.open=true;});
+  });
+})();
+</script>
+</body>
+</html>
