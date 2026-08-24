@@ -181,32 +181,40 @@ footer p{margin:.3rem 0}
 
 <!-- 1 · arrival -->
 <section class="stage" id="hero" data-rail="Start">
-  <p class="eyebrow">kickoff · one hour · then the real work</p>
+  <p class="eyebrow">kickoff · one hour</p>
   <h1>Danish BC Developer<br>AI Hackathon</h1>
   <p class="sub">AI-assisted AL development, harness engineering and feedback loops.</p>
   <p class="keys rv">presenting: <kbd>space</kbd> or <kbd>page ↓</kbd> · reading later: just scroll, and open the <span style="color:var(--green)">▸</span> blocks</p>
 </section>
 
-<!-- 2 · why this day exists -->
-<section class="stage" id="climate" data-rail="Why">
-  <h2>A bug arrives. Someone fixes it.<br>Someone reviews it.</h2>
-  <div class="line rv">Where does the knowledge live that made the fix correct?</div>
-  <div class="line rv">In heads. In review comments. It evaporates.</div>
-  <div class="line rv">Every fix pays for that knowledge again.</div>
-  <div class="line rv">Now it can be written down — and executed.</div>
-  <div class="line rv"><span style="font-family:var(--mono)">Context. Done. Verify. Stop.</span></div>
-  <div class="line rv">Encoded knowledge is versioned, reviewed, inherited.</div>
-  <div class="line rv">Heads don't compound. Harnesses do.</div>
-  <div class="line rv">It requires an agreed workflow.</div>
-  <div class="line rv">You can avoid bad weather. You cannot avoid a changing climate.</div>
-  <div class="line g rv">Today: encode what you know.</div>
+<!-- 2 · the global diagnosis -->
+<section class="stage" id="why" data-rail="Why">
+  <p class="eyebrow">the state of the field · mid-2026</p>
+  <h2>Where agentic development stands.</h2>
+
+  <table class="scen rv" style="max-width:46rem">
+    <thead><tr><th>measured</th><th>finding</th></tr></thead>
+    <tbody>
+      <tr><td>task length agents complete autonomously</td><td class="num" style="text-align:left"><span style="font-family:var(--mono);font-weight:600">doubling ≈ every 7 months</span> <span style="color:var(--faint)">(METR)</span></td></tr>
+      <tr><td>cost of adopting agentic development</td><td style="color:var(--muted)">immediate — tooling, tokens, learning time</td></tr>
+      <tr><td>gain</td><td style="color:var(--muted)">lagging and diffuse — arrives after the way of working changes</td></tr>
+    </tbody>
+  </table>
+
+  <table class="scen rv" style="max-width:46rem">
+    <thead><tr><th>practice, observed today</th><th>what it looks like</th></tr></thead>
+    <tbody>
+      <tr><td>ask</td><td style="color:var(--muted)">paste context into chat, judge the output by eye</td></tr>
+      <tr><td>equip &amp; loop</td><td style="color:var(--muted)">the agent runs compiler, analyzers, tests — the human reviews evidence</td></tr>
+      <tr><td>orchestrate</td><td style="color:var(--muted)">multiple agents behind verification gates — humans supervise decisions</td></tr>
+    </tbody>
+  </table>
 
   <details class="rec">
-    <summary>for the record — the mechanism, spelled out</summary>
+    <summary>for the record — sources and notes</summary>
     <div class="body">
-      <p>The argument above is the whole day in miniature. The knowledge that makes a fix correct — which analyzers matter, what a real test proves, when a result can be trusted — traditionally lives in senior heads and scrolling review comments. Written as executable contracts (<em>Context, Done, Verify, Stop</em>), it becomes something a machine can run on every change: versioned like code, reviewed like code, improved after every surprise, inherited by the next project instead of relearned.</p>
-      <p>It compounds only through an <strong>agreed workflow</strong>: one shared, centrally maintained set of skills and gates, not a drawer of private ones. Production work will run on such a shared workflow; today's skills are learning artifacts, built so you can use, supervise, challenge and improve the shared one — and feed improvements back as DevOps work items.</p>
-      <p>At full scale, this already runs in public: <a href="https://github.com/StefanMaron/BusinessCentral.AL.Runner" rel="noopener">StefanMaron/BusinessCentral.AL.Runner</a> — the test runner used in today's exercises — where agent instruction files are versioned engineering policy, no agent may merge its own work (enforced by tool permissions, not trust), and a human can take over any item by assigning themselves.</p>
+      <p>METR measures the length of tasks AI agents can complete autonomously; the measured doubling time is roughly seven months (<a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/" rel="noopener">metr.org</a>). The rows in the second table are observed working practices, not a ranking — teams at different rows use the same words (agents, cost, quality) and report different realities, which is why conversations about "whether the AI spend is worth it" so often talk past each other.</p>
+      <p>The economics are asymmetric: the cost of agentic development is itemized and lands on an invoice now; the gain arrives later, and only after the way of working changes. That asymmetry is a property of the transition, not a verdict on it.</p>
     </div>
   </details>
 </section>
@@ -224,9 +232,7 @@ footer p{margin:.3rem 0}
     <div class="st next"><div class="blk" style="height:216px"></div><div class="lab">graph<small>agents together</small></div></div>
   </div>
 
-  <div class="line rv">Each step keeps everything below it.</div>
-  <div class="line g rv">Today: context, harness, loop.</div>
-  <p class="note rv">Credit: Freddy Kristiansen, <a href="https://freddysblog.com/2026/08/15/the-engineering-stairway-to-heaven/" rel="noopener">The Engineering Stairway to Heaven</a>.</p>
+  <p class="note rv"><span style="color:var(--green);font-weight:600">■</span> today's steps: context · harness · loop&ensp;·&ensp;The six steps: Freddy Kristiansen, <a href="https://freddysblog.com/2026/08/15/the-engineering-stairway-to-heaven/" rel="noopener">The Engineering Stairway to Heaven</a></p>
 
   <details class="rec">
     <summary>for the record — the steps, and the three operating levels</summary>
@@ -247,14 +253,12 @@ footer p{margin:.3rem 0}
 <!-- 4 · the tool of the day -->
 <section class="stage" id="contract" data-rail="Contract">
   <h2>Every skill answers<br>four questions.</h2>
-  <div class="line rv">You package what you know into skills.</div>
 
-  <div class="code rv"><span class="k">Context:</span>  where may the agent look?
+  <div class="code rv"><span class="c"># the contract — required for every skill built today</span>
+<span class="k">Context:</span>  where may the agent look?
 <span class="k">Done:</span>     what exact result is required?
 <span class="k">Verify:</span>   how are success <span class="r">and failure</span> proven?
 <span class="k">Stop:</span>     when must it halt and escalate?</div>
-
-  <div class="line rv">All four, or it isn't done.</div>
 
   <details class="rec">
     <summary>for the record — why the contract matters</summary>
@@ -287,7 +291,7 @@ footer p{margin:.3rem 0}
     <div class="role"><h3>Verifier</h3><p>Does the evidence really prove the checkpoint?</p></div>
     <div class="role"><h3>Recorder</h3><p>Contracts, decisions, failures, lessons.</p></div>
   </div>
-  <div class="line rv" style="font-size:clamp(1.1rem,2vw,1.6rem)">Rotate after the compile and analyzer stages.</div>
+  <p class="note rv">Rotation: after the compile and analyzer stages. Teams mix AI experience levels deliberately.</p>
 
   <div class="flow rv">
     <span class="step go">work item 1 · build the harness</span><span class="arr">→</span><span class="step">break</span><span class="arr">→</span><span class="step go">work item 2 · TDD</span><span class="arr">→</span><span class="step">demos &amp; debrief</span>
@@ -315,15 +319,15 @@ footer p{margin:.3rem 0}
   <p class="eyebrow">azure devops · <b>work item 13226</b></p>
   <h2>First: build the harness.</h2>
 
-  <div class="line rv">A blank repository. No starter code.</div>
-  <div class="line rv">First move: Copilot fetches this work item itself.</div>
-  <div class="chips rv">
-    <span class="chip"><b>1</b> compile</span>
-    <span class="chip"><b>2</b> analyzer</span>
-    <span class="chip"><b>3</b> test</span>
-    <span class="chip"><b>4</b> verify-all</span>
-  </div>
-  <div class="line rv">Each skill proves success — and deliberate failure.</div>
+  <table class="scen rv" style="max-width:46rem">
+    <tbody>
+      <tr><td style="white-space:nowrap;font-family:var(--mono)">start</td><td style="color:var(--muted)">blank repository — no starter code</td></tr>
+      <tr><td style="white-space:nowrap;font-family:var(--mono)">first step</td><td style="color:var(--muted)">Copilot fetches this work item through Azure DevOps MCP</td></tr>
+      <tr><td style="white-space:nowrap;font-family:var(--mono)">build</td><td style="color:var(--muted)">four skills — compile · analyzer · test · verify-all</td></tr>
+      <tr><td style="white-space:nowrap;font-family:var(--mono)">each skill</td><td style="color:var(--muted)">the four-question contract, plus a proven success <em>and</em> a proven deliberate failure</td></tr>
+      <tr><td style="white-space:nowrap;font-family:var(--mono)">checkpoints</td><td style="color:var(--muted)">A – E, detailed below</td></tr>
+    </tbody>
+  </table>
 
   <p class="rv" style="margin-top:1.5rem"><a class="btn" href="https://dev.azure.com/Dynalogic/9A%20Intern/_workitems/edit/13226/" rel="noopener">open work item 13226 <span class="dim">→ the full requirements live here</span></a></p>
 
@@ -349,8 +353,6 @@ footer p{margin:.3rem 0}
 
   <div class="formula rv"><span class="k">available credit</span> := credit limit − outstanding balance</div>
 
-  <div class="line rv">Seven scenarios. Every test fails first.</div>
-
   <table class="scen rv">
     <thead><tr><th>scenario</th><th>limit</th><th>balance</th><th>amount</th><th>verdict</th></tr></thead>
     <tbody>
@@ -364,7 +366,12 @@ footer p{margin:.3rem 0}
     </tbody>
   </table>
 
-  <div class="line rv">When green: break it. A test must object.</div>
+  <table class="scen rv" style="max-width:46rem">
+    <tbody>
+      <tr><td style="white-space:nowrap;font-family:var(--mono)">method</td><td style="color:var(--muted)">per scenario: observe the test fail for the expected reason → smallest implementation → green → refactor</td></tr>
+      <tr><td style="white-space:nowrap;font-family:var(--mono)">proof</td><td style="color:var(--muted)">break the finished implementation once — a test must catch it</td></tr>
+    </tbody>
+  </table>
 
   <p class="rv" style="margin-top:1.5rem"><a class="btn" href="https://dev.azure.com/Dynalogic/9A%20Intern/_workitems/edit/13227" rel="noopener">open work item 13227 <span class="dim">→ the full requirements live here</span></a></p>
 
