@@ -188,35 +188,25 @@ footer p{margin:.3rem 0}
 </section>
 
 <!-- 2 · why this day exists -->
-<section class="stage" id="climate" data-rail="Climate">
-  <h2>Software engineering has<br>weather and climate.</h2>
-  <div class="line rv">This is climate:</div>
-  <div class="line rv">Crash telemetry files the issues itself.</div>
-  <div class="line rv">Agents triage, implement, review. Continuously.</div>
-  <div class="line rv">No agent may merge its own work.</div>
-  <div class="line rv">The second-busiest committer is an agent.</div>
-  <div class="line rv">Months. Not a demo week.</div>
-  <div class="line rv">You can avoid bad weather.</div>
-  <div class="line rv">You cannot avoid a changing climate.</div>
-  <div class="line g rv">Today: learn to build for it.</div>
+<section class="stage" id="climate" data-rail="Why">
+  <h2>A bug arrives. Someone fixes it.<br>Someone reviews it.</h2>
+  <div class="line rv">Where does the knowledge live that made the fix correct?</div>
+  <div class="line rv">In heads. In review comments. It evaporates.</div>
+  <div class="line rv">Every fix pays for that knowledge again.</div>
+  <div class="line rv">Now it can be written down — and executed.</div>
+  <div class="line rv"><span style="font-family:var(--mono)">Context. Done. Verify. Stop.</span></div>
+  <div class="line rv">Encoded knowledge is versioned, reviewed, inherited.</div>
+  <div class="line rv">Heads don't compound. Harnesses do.</div>
+  <div class="line rv">It requires an agreed workflow.</div>
+  <div class="line rv">You can avoid bad weather. You cannot avoid a changing climate.</div>
+  <div class="line g rv">Today: encode what you know.</div>
 
   <details class="rec">
-    <summary>for the record — the climate data</summary>
+    <summary>for the record — the mechanism, spelled out</summary>
     <div class="body">
-      <p>The system described above runs in <a href="https://github.com/StefanMaron/BusinessCentral.AL.Runner" rel="noopener">StefanMaron/BusinessCentral.AL.Runner</a> — the community test runner used in today's exercises. All of it is public and inspectable.</p>
-      <div class="stats">
-        <div class="stat"><div class="v">~857</div><div class="l">PRs squash-merged in 134 days (~6.4/day)</div></div>
-        <div class="stat ok"><div class="v">102·62·17</div><div class="l">commits since late June: maintainer · claude[bot] · me</div></div>
-        <div class="stat"><div class="v">7 mo</div><div class="l">of my own agent-session history, 70% BC work</div></div>
-      </div>
-      <ul>
-        <li>A scheduled telemetry job queries Application Insights, groups crashes by root cause, dedupes against open issues, and files structured reports. The triage bot has its own test suite.</li>
-        <li>A triage agent labels issues ready or needs-input; it may not write code, and leaving an issue for a human is a valid outcome.</li>
-        <li>Two implementation agents work in parallel in isolated git worktrees, strict test-first. They cannot merge.</li>
-        <li>An orchestrator reviews and merges. It has merge rights but no edit rights — separation of powers is enforced by tool permissions, not trust.</li>
-        <li>The assignee field is the human/agent boundary: a human takes over any item, at any stage, by assigning themselves.</li>
-        <li>The agents' instruction files are versioned, reviewed, and revised after every surprise — engineering policy as code.</li>
-      </ul>
+      <p>The argument above is the whole day in miniature. The knowledge that makes a fix correct — which analyzers matter, what a real test proves, when a result can be trusted — traditionally lives in senior heads and scrolling review comments. Written as executable contracts (<em>Context, Done, Verify, Stop</em>), it becomes something a machine can run on every change: versioned like code, reviewed like code, improved after every surprise, inherited by the next project instead of relearned.</p>
+      <p>It compounds only through an <strong>agreed workflow</strong>: one shared, centrally maintained set of skills and gates, not a drawer of private ones. Production work will run on such a shared workflow; today's skills are learning artifacts, built so you can use, supervise, challenge and improve the shared one — and feed improvements back as DevOps work items.</p>
+      <p>At full scale, this already runs in public: <a href="https://github.com/StefanMaron/BusinessCentral.AL.Runner" rel="noopener">StefanMaron/BusinessCentral.AL.Runner</a> — the test runner used in today's exercises — where agent instruction files are versioned engineering policy, no agent may merge its own work (enforced by tool permissions, not trust), and a human can take over any item by assigning themselves.</p>
     </div>
   </details>
 </section>
